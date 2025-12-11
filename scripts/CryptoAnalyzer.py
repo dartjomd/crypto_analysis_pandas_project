@@ -1,7 +1,7 @@
-from typing import Literal
 import pandas as pd
 
-COLUMNS_TYPE = Literal["price", "volume"]
+from enums.OrderEnum import OrderEnum
+from enums.ColumnsToAnalyze import ColumnsToAnalyze
 
 
 class CryptoAnalyzer:
@@ -35,8 +35,8 @@ class CryptoAnalyzer:
     def get_spikes(
         self,
         up_to_rank: int,
-        column: COLUMNS_TYPE,
-        order: Literal["DESC", "ASC"],
+        column: ColumnsToAnalyze,
+        order: OrderEnum,
         coin_name: str,
         currency: str,
         start_date_key: int,
@@ -54,9 +54,6 @@ class CryptoAnalyzer:
         :param end_date_key: YYYYMMDD format string for defining ending date for getting spikes
         """
 
-        # form order argument
-        sorting_order = True if order == "ASC" else False
-
         # copy df so it doesn't affect the initial one
         df = self.df.copy()
 
@@ -69,7 +66,7 @@ class CryptoAnalyzer:
         df = df[date_mask]
 
         # sort values by given column and given order
-        df = df.sort_values(by=column, ascending=sorting_order)
+        df = df.sort_values(by=column, ascending=order)
 
         # get top N rows
         df = df[:up_to_rank]
@@ -77,7 +74,7 @@ class CryptoAnalyzer:
 
     def get_moving_average(
         self,
-        column: COLUMNS_TYPE,
+        column: ColumnsToAnalyze,
         total_day_span: int,
         coin_name: str,
         currency: str,
@@ -107,7 +104,7 @@ class CryptoAnalyzer:
         return df
 
     def get_volatility(
-        self, column: COLUMNS_TYPE, lag_to_row: int, coin_name: str, currency: str
+        self, column: ColumnsToAnalyze, lag_to_row: int, coin_name: str, currency: str
     ) -> pd.DataFrame:
         """
         Get volatility by days for (coin, currency) pair
@@ -126,7 +123,7 @@ class CryptoAnalyzer:
         # calculate volatility based on arguments
         volatility_column = f"{column}_growth"
         df = (
-            df.sort_values(by="date_key", ascending=True)
+            df.sort_values(by="date_key", ascending=OrderEnum.ascending.value)
             .assign(
                 previous=lambda x: x[column].shift(
                     periods=lag_to_row

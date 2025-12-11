@@ -8,9 +8,11 @@ from CryptoExtracter import CryptoExtracter
 from CryptoTransformer import CryptoTransformer
 from CryptoVisualizer import CryptoVisualizer
 from CryptoAnalyzer import CryptoAnalyzer
+from enums.OrderEnum import OrderEnum
+from enums.ColumnsToAnalyze import ColumnsToAnalyze
 
 
-DAYS_OF_HISTORY = 10000
+DAYS_OF_HISTORY = 100
 COINS = ["hh", "ethereum"]
 CURRENCY = ["usd"]
 
@@ -36,9 +38,9 @@ async def main():
         up_to_timestamp=end_point_timestamp,
         coins_data=coins_data,
     )
-    print(crypto_data)  # fix it [{}, {}]
-    return
-    if len(crypto_data) == 0:
+
+    # check if every requested dataset is empty
+    if all(not d for d in crypto_data):
         print("No data to analyse")
         return
 
@@ -63,8 +65,8 @@ async def main():
         end_date_key = 20251125
         df_spikes_data = analyzer.get_spikes(
             up_to_rank=5,
-            order="DESC",
-            column="capitalization",
+            order=OrderEnum.descending.value,
+            column=ColumnsToAnalyze.capitalization.value,
             coin_name=coin,
             currency=currency,
             start_date_key=start_date_key,
@@ -72,7 +74,7 @@ async def main():
         )
         CryptoVisualizer.plot_spikes(
             df=df_spikes_data,
-            column="capitalization",
+            column=ColumnsToAnalyze.capitalization.value,
             start_date_key=start_date_key,
             end_date_key=end_date_key,
         )
@@ -86,10 +88,14 @@ async def main():
         df_monthly_data = analyzer.get_monthly_analysis(
             coin_name=coin, currency=currency
         )
-        CryptoVisualizer.plot_monthly_analysis(df=df_monthly_data, column="avg_price")
-        CryptoVisualizer.plot_monthly_analysis(df=df_monthly_data, column="avg_volume")
         CryptoVisualizer.plot_monthly_analysis(
-            df=df_monthly_data, column="avg_capitalization"
+            df=df_monthly_data, column=ColumnsToAnalyze.average_price.value
+        )
+        CryptoVisualizer.plot_monthly_analysis(
+            df=df_monthly_data, column=ColumnsToAnalyze.average_volume.value
+        )
+        CryptoVisualizer.plot_monthly_analysis(
+            df=df_monthly_data, column=ColumnsToAnalyze.average_capitalization.value
         )
 
         # visualize monthly share of volume
@@ -99,21 +105,28 @@ async def main():
         total_day_span = 7
         df_moving_average_data = analyzer.get_moving_average(
             total_day_span=total_day_span,
-            column="price",
+            column=ColumnsToAnalyze.price.value,
             coin_name=coin,
             currency=currency,
         )
         CryptoVisualizer.plot_moving_average(
-            df=df_moving_average_data, column="price", total_day_span=total_day_span
+            df=df_moving_average_data,
+            column=ColumnsToAnalyze.price.value,
+            total_day_span=total_day_span,
         )
 
         # visualize growth
         days_to_lag = 3
         df_volatility_data = analyzer.get_volatility(
-            column="price", lag_to_row=days_to_lag, coin_name=coin, currency=currency
+            column=ColumnsToAnalyze.price.value,
+            lag_to_row=days_to_lag,
+            coin_name=coin,
+            currency=currency,
         )
         CryptoVisualizer.plot_volatility(
-            df=df_volatility_data, column="price", days_to_lag=days_to_lag
+            df=df_volatility_data,
+            column=ColumnsToAnalyze.price.value,
+            days_to_lag=days_to_lag,
         )
         continue
 
@@ -122,4 +135,4 @@ if __name__ == "__main__":
     asyncio.run(main())
 
 
-# api errors, decorator
+# decorator

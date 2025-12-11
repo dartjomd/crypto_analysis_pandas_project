@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.ticker as mticker
 import matplotlib
+from enums.OrderEnum import OrderEnum
 
 matplotlib.use("Agg")
 
@@ -35,7 +36,7 @@ class CryptoVisualizer:
         df = df.copy()
 
         if df.empty:
-            print("DataFrame is empty. Unable to build chart.")
+            print("DataFrame is empty. Unable to build general info chart.")
             return
 
         # filter data down to a single pair
@@ -126,7 +127,7 @@ class CryptoVisualizer:
         :type column: str
         """
         if df.empty or column not in df.columns:
-            print(f"DataFrame is empty or '{column}' is absent")
+            print(f"DataFrame is empty or '{column}' is absent for monthly analysis.")
             return
 
         # get coin name and currency
@@ -134,7 +135,7 @@ class CryptoVisualizer:
         currency_code = df["currency"].iloc[0].upper()
 
         # sort data by date key
-        subset = df.sort_values(by="date_key", ascending=True)
+        subset = df.sort_values(by="date_key", ascending=OrderEnum.ascending.value)
 
         # configure labels
         title_map = {
@@ -195,7 +196,7 @@ class CryptoVisualizer:
         :param column: The column that was ranked
         """
         if df.empty:
-            print(f"DataFrame for spikes is empty. Unable to draw a graph")
+            print(f"DataFrame for spikes is empty. Unable to draw a spikes graph")
             return
 
         # format starting/ending dates
@@ -267,7 +268,9 @@ class CryptoVisualizer:
         :param total_day_span: total amount of days used to calculate moving average
         """
         if df.empty:
-            print(f"DataFrame for moving average is empty. Unable to draw a graph")
+            print(
+                f"DataFrame for moving average is empty. Unable to draw a moving average graph"
+            )
             return
 
         # form data
@@ -336,7 +339,9 @@ class CryptoVisualizer:
         :param days_to_lag: days back to calculate volatility
         """
         if df.empty:
-            print(f"DataFrame for volatility is empty. Unable to draw a graph")
+            print(
+                f"DataFrame for volatility is empty. Unable to draw a volatility graph"
+            )
             return
 
         # prepare data and context
@@ -397,7 +402,9 @@ class CryptoVisualizer:
             return f"{pct:.1f}%\n({volume_formatted})"
 
         if df.empty or "avg_volume" not in df.columns:
-            print("Visualizer: DataFrame is empty or 'avg_volume' column is missing.")
+            print(
+                "DataFrame is empty or 'avg_volume' column is missing. Unable to draw a monthly volume share graph."
+            )
             return
 
         # copy df for maximum 12 months
