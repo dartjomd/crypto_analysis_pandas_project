@@ -1,9 +1,6 @@
 import asyncio
 from datetime import datetime, timedelta
-from pathlib import Path
 import time
-import os
-import pandas as pd
 from CryptoExtracter import CryptoExtracter
 from CryptoTransformer import CryptoTransformer
 from CryptoVisualizer import CryptoVisualizer
@@ -133,6 +130,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-
-
-# decorator

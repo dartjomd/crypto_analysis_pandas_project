@@ -79,7 +79,7 @@ class CryptoTransformer:
 
         # final DataFrame with all data
         if len(list_of_dfs) == 0:
-            return pd.DataFrame([])  # fix this
+            return pd.DataFrame([])
         df_final = pd.concat(list_of_dfs)
 
         # round float values
