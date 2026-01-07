@@ -1,7 +1,7 @@
 import pandas as pd
 
 from enums.OrderEnum import OrderEnum
-from enums.ColumnsToAnalyze import ColumnsToAnalyze
+from enums.ColumnsToAnalyzeEnum import ColumnsToAnalyzeEnum
 
 
 def get_coin_currency_pair(function):
@@ -52,7 +52,7 @@ class CryptoAnalyzer:
     def get_spikes(
         self,
         up_to_rank: int,
-        column: ColumnsToAnalyze,
+        column: ColumnsToAnalyzeEnum,
         order: OrderEnum,
         start_date_key: int,
         end_date_key: int,
@@ -89,7 +89,7 @@ class CryptoAnalyzer:
     @get_coin_currency_pair
     def get_moving_average(
         self,
-        column: ColumnsToAnalyze,
+        column: ColumnsToAnalyzeEnum,
         total_day_span: int,
         df: pd.DataFrame,
         coin_name: str,
@@ -120,7 +120,7 @@ class CryptoAnalyzer:
     @get_coin_currency_pair
     def get_volatility(
         self,
-        column: ColumnsToAnalyze,
+        column: ColumnsToAnalyzeEnum,
         lag_to_row: int,
         df: pd.DataFrame,
         coin_name: str,
