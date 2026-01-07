@@ -436,9 +436,7 @@ class CryptoVisualizer:
 
         fig, ax = plt.subplots(figsize=(10, 10))
 
-        formatted_labels = [
-            f"{ym[:4]}-{ym[4:6]}" for ym in subset["year_month_key"].astype(str)
-        ]
+        formatted_labels = subset["year_month_key"].astype(str).tolist()
         sizes = subset["avg_volume"]
 
         wedges, texts, autotexts = ax.pie(

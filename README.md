@@ -1,4 +1,4 @@
-# Crypto ETL Pipeline (Local Analytics) 📈
+# Crypto ETL Pipeline (Local Analytics)
 
 A robust asynchronous **ETL (Extract, Transform, Load)** pipeline designed for crypto market analysis. This project automates the journey from raw API data to cleaned datasets and visual insights using Python and Pandas.
 
@@ -14,7 +14,7 @@ The pipeline follows a strict separation of concerns to ensure scalability and m
 
 
 
-## 🛠 Tech Stack
+## Tech Stack
 * **Core:** Python 3.11
 * **Data Handling:** Pandas (Transformation & Analysis)
 * **Async IO:** Aiohttp, Asyncio
