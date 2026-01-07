@@ -1,7 +1,7 @@
 import pandas as pd
 
-from enums.OrderEnum import OrderEnum
-from enums.ColumnsToAnalyzeEnum import ColumnsToAnalyzeEnum
+from scripts.enums.OrderEnum import OrderEnum
+from scripts.enums.ColumnsToAnalyzeEnum import ColumnsToAnalyzeEnum
 
 
 def get_coin_currency_pair(function):

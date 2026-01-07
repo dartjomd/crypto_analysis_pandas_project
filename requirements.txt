@@ -1,3 +1,5 @@
 pandas
 matplotlib
 aiohttp
+pytest
+pytest-asyncio
