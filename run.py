@@ -1,15 +1,14 @@
-import asyncio
 from datetime import datetime, timedelta
-from pathlib import Path
 import time
-import os
-import pandas as pd
-from CryptoExtracter import CryptoExtracter
-from CryptoTransformer import CryptoTransformer
-from CryptoVisualizer import CryptoVisualizer
-from CryptoAnalyzer import CryptoAnalyzer
-from enums.OrderEnum import OrderEnum
-from enums.ColumnsToAnalyze import ColumnsToAnalyze
+
+import asyncio
+
+from scripts.CryptoExtracter import CryptoExtracter
+from scripts.CryptoTransformer import CryptoTransformer
+from scripts.CryptoVisualizer import CryptoVisualizer
+from scripts.CryptoAnalyzer import CryptoAnalyzer
+from scripts.enums.OrderEnum import OrderEnum
+from scripts.enums.ColumnsToAnalyzeEnum import ColumnsToAnalyzeEnum
 
 
 DAYS_OF_HISTORY = 100
@@ -66,7 +65,7 @@ async def main():
         df_spikes_data = analyzer.get_spikes(
             up_to_rank=5,
             order=OrderEnum.descending.value,
-            column=ColumnsToAnalyze.capitalization.value,
+            column=ColumnsToAnalyzeEnum.capitalization.value,
             coin_name=coin,
             currency=currency,
             start_date_key=start_date_key,
@@ -74,7 +73,7 @@ async def main():
         )
         CryptoVisualizer.plot_spikes(
             df=df_spikes_data,
-            column=ColumnsToAnalyze.capitalization.value,
+            column=ColumnsToAnalyzeEnum.capitalization.value,
             start_date_key=start_date_key,
             end_date_key=end_date_key,
         )
@@ -89,13 +88,13 @@ async def main():
             coin_name=coin, currency=currency
         )
         CryptoVisualizer.plot_monthly_analysis(
-            df=df_monthly_data, column=ColumnsToAnalyze.average_price.value
+            df=df_monthly_data, column=ColumnsToAnalyzeEnum.average_price.value
         )
         CryptoVisualizer.plot_monthly_analysis(
-            df=df_monthly_data, column=ColumnsToAnalyze.average_volume.value
+            df=df_monthly_data, column=ColumnsToAnalyzeEnum.average_volume.value
         )
         CryptoVisualizer.plot_monthly_analysis(
-            df=df_monthly_data, column=ColumnsToAnalyze.average_capitalization.value
+            df=df_monthly_data, column=ColumnsToAnalyzeEnum.average_capitalization.value
         )
 
         # visualize monthly share of volume
@@ -105,27 +104,27 @@ async def main():
         total_day_span = 7
         df_moving_average_data = analyzer.get_moving_average(
             total_day_span=total_day_span,
-            column=ColumnsToAnalyze.price.value,
+            column=ColumnsToAnalyzeEnum.price.value,
             coin_name=coin,
             currency=currency,
         )
         CryptoVisualizer.plot_moving_average(
             df=df_moving_average_data,
-            column=ColumnsToAnalyze.price.value,
+            column=ColumnsToAnalyzeEnum.price.value,
             total_day_span=total_day_span,
         )
 
         # visualize growth
         days_to_lag = 3
         df_volatility_data = analyzer.get_volatility(
-            column=ColumnsToAnalyze.price.value,
+            column=ColumnsToAnalyzeEnum.price.value,
             lag_to_row=days_to_lag,
             coin_name=coin,
             currency=currency,
         )
         CryptoVisualizer.plot_volatility(
             df=df_volatility_data,
-            column=ColumnsToAnalyze.price.value,
+            column=ColumnsToAnalyzeEnum.price.value,
             days_to_lag=days_to_lag,
         )
         continue
@@ -133,6 +132,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-
-
-# decorator
