@@ -1,5 +1,5 @@
-from BaseFetchClass import BaseFetchClass
-from consts import BASE_URL
+from scripts.BaseFetchClass import BaseFetchClass
+from scripts.consts import BASE_URL
 
 
 class CryptoExtracter(BaseFetchClass):

@@ -8,12 +8,7 @@ from scripts.CryptoTransformer import CryptoTransformer
 from scripts.CryptoVisualizer import CryptoVisualizer
 from scripts.CryptoAnalyzer import CryptoAnalyzer
 from scripts.enums.OrderEnum import OrderEnum
-from scripts.enums.ColumnsToAnalyzeEnum import ColumnsToAnalyzeEnum
-
-
-DAYS_OF_HISTORY = 100
-COINS = ["hh", "ethereum"]
-CURRENCY = ["usd"]
+from scripts.enums.ColumnsToVisualizeEnum import ColumnsToVisualizeEnum
 
 
 def get_coins_data(
@@ -23,11 +18,13 @@ def get_coins_data(
     return [(coin, currency) for coin in coins_list for currency in currency_list]
 
 
-async def main():
+async def main(
+    days_of_history: int, coins: list[str], currency: list[str], filename: str
+):
     # get coins data for extracting and transforming data correctly
-    coins_data = get_coins_data(coins_list=COINS, currency_list=CURRENCY)
+    coins_data = get_coins_data(coins_list=coins, currency_list=currency)
     end_point_timestamp = int(time.time())
-    start_date = datetime.now() - timedelta(days=DAYS_OF_HISTORY)
+    start_date = datetime.now() - timedelta(days=days_of_history)
     start_timestamp = int(start_date.timestamp())
 
     # extract data using API
@@ -48,7 +45,6 @@ async def main():
     transformer.normalize_crypto_data(data=crypto_data, coins_data=coins_data)
 
     # save CSV into data folder
-    filename = "normalized_dataframe.csv"
     transformer.save_normalized_data_to_csv(filename)
 
     df_crypto = transformer.get_normalized_crypto()
@@ -65,7 +61,7 @@ async def main():
         df_spikes_data = analyzer.get_spikes(
             up_to_rank=5,
             order=OrderEnum.descending.value,
-            column=ColumnsToAnalyzeEnum.capitalization.value,
+            column=ColumnsToVisualizeEnum.capitalization.value,
             coin_name=coin,
             currency=currency,
             start_date_key=start_date_key,
@@ -73,7 +69,7 @@ async def main():
         )
         CryptoVisualizer.plot_spikes(
             df=df_spikes_data,
-            column=ColumnsToAnalyzeEnum.capitalization.value,
+            column=ColumnsToVisualizeEnum.capitalization.value,
             start_date_key=start_date_key,
             end_date_key=end_date_key,
         )
@@ -88,13 +84,14 @@ async def main():
             coin_name=coin, currency=currency
         )
         CryptoVisualizer.plot_monthly_analysis(
-            df=df_monthly_data, column=ColumnsToAnalyzeEnum.average_price.value
+            df=df_monthly_data, column=ColumnsToVisualizeEnum.average_price.value
         )
         CryptoVisualizer.plot_monthly_analysis(
-            df=df_monthly_data, column=ColumnsToAnalyzeEnum.average_volume.value
+            df=df_monthly_data, column=ColumnsToVisualizeEnum.average_volume.value
         )
         CryptoVisualizer.plot_monthly_analysis(
-            df=df_monthly_data, column=ColumnsToAnalyzeEnum.average_capitalization.value
+            df=df_monthly_data,
+            column=ColumnsToVisualizeEnum.average_capitalization.value,
         )
 
         # visualize monthly share of volume
@@ -104,31 +101,38 @@ async def main():
         total_day_span = 7
         df_moving_average_data = analyzer.get_moving_average(
             total_day_span=total_day_span,
-            column=ColumnsToAnalyzeEnum.price.value,
+            column=ColumnsToVisualizeEnum.price.value,
             coin_name=coin,
             currency=currency,
         )
         CryptoVisualizer.plot_moving_average(
             df=df_moving_average_data,
-            column=ColumnsToAnalyzeEnum.price.value,
+            column=ColumnsToVisualizeEnum.price.value,
             total_day_span=total_day_span,
         )
 
         # visualize growth
         days_to_lag = 3
         df_volatility_data = analyzer.get_volatility(
-            column=ColumnsToAnalyzeEnum.price.value,
+            column=ColumnsToVisualizeEnum.price.value,
             lag_to_row=days_to_lag,
             coin_name=coin,
             currency=currency,
         )
         CryptoVisualizer.plot_volatility(
             df=df_volatility_data,
-            column=ColumnsToAnalyzeEnum.price.value,
+            column=ColumnsToVisualizeEnum.price.value,
             days_to_lag=days_to_lag,
         )
         continue
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(
+        main(
+            days_of_history=100,
+            coins=["bitcoin", "non_existing_coin"],
+            currency=["usd", "non_existing_currency"],
+            filename="bitcoin_usd_data.csv",
+        )
+    )
